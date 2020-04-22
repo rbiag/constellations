@@ -1,0 +1,347 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title> Constellations </title>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Lora:ital@1&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300&display=swap');
+</style>
+
+<script src="https://zimjs.org/cdn/1.3.0/createjs.js"></script>
+<script src="https://zimjs.org/cdn/10.9.0/zim.js"></script>
+
+<script>
+
+const scaling = "full";
+const width = null;
+const height = null;
+const color = "#222222";
+const outerColor = white;
+const assets = [
+    "star.png",
+    //LEVEL ONE
+    "coral_1.png",
+    "coral_2.png",
+    "fish.png",
+    "whale_1.png",
+    "whale_2.png",
+    "jellyfish.png"
+];
+const path ="assets/";
+
+const frame = new Frame(scaling, width, height, color, outerColor, assets, path);
+frame.on("ready", () => { // ES6 Arrow Function - like function(){}
+    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+
+    const stage = frame.stage;
+    let stageW = frame.width;
+    let stageH = frame.height;
+
+    const splashScreenPage = new Container(stageW, stageH);
+    const introPage = new Container(stageW, stageH);
+    const levelOnePage = new Container(stageW, stageH);
+    const levelTwoPage = new Container(stageW, stageH);
+    const levelThreePage = new Container(stageW, stageH);
+    const conclusionPage = new Container(stageW, stageH);
+
+    const pages = new Pages([
+        {page:splashScreenPage, swipe:[null, null, introPage, null], speed:1000},
+        {page:introPage, swipe:[levelOnePage, null, null, null], speed:1000},
+        {page:levelOnePage, swipe:[null, null, null, null], speed:1000},
+    ], "slide", 700).addTo();
+
+    splashScreen();
+
+    //SPLASH SCREEN COMPONENTS
+    var ssContent = new Container(stageW, stageH).addTo(splashScreenPage);
+    var ssTitle = ssTitle = new Label({
+        text: 'Constellations',
+        font: 'Lora',
+        size: '40',
+        color: '#D8A16D',
+        align: "center"
+    }).pos(0,-10,CENTER,CENTER, ssContent);
+    var ssSubtext = new Label({
+        text: 'A Scavenger Hunt for the Stars',
+        color: '#D8A16D',
+        font: 'Lato',
+        size: '18',
+        align: "center"
+    }).pos(0,30,CENTER,CENTER, ssContent);
+
+    //SPLASH SCREEN LAYOUT
+    const ssLayoutManager = new LayoutManager();
+    ssLayoutManager.add(new Layout(splashScreenPage, [
+        {object: new Container(0,0).addTo(splashScreenPage)},
+        {object: ssContent},
+        {object: new Container(0,0).addTo(splashScreenPage)}
+    ], 5, "#222222", true, new Shape(), stage));
+    ssLayoutManager.dispose();
+
+    //SPLASH SCREEN FUNCTION
+    function splashScreen(){
+        timeout(2000, function(){
+            pages.go(introPage, "down");
+            intro();
+        });
+    }
+
+    //INTRO COMPONENTS
+    var introContent = new Container(stageW, stageH).addTo(introPage);
+    var introTitle = new Label({
+        text: 'The Sky is Falling!',
+        font: 'Lora',
+        size: '40',
+        color: '#D8A16D',
+        align: 'center'
+    }).pos(0,-50,CENTER,CENTER, introContent);
+    var introSubtext = new Label({
+        text: "And with it the stars have decided to hide amongst ordinary places so they can be left uninterrupted. But as they're an essential part of the universe, someone needs to find them again.",
+        color: white,
+        font: 'Lato',
+        size: '18',
+        align: 'center',
+        labelWidth: (stageW-30)
+    }).pos(0,30,CENTER,CENTER, introContent);
+    var introNextBtn = new Button({
+        label: new Label({
+            text: 'Next',
+            font: 'Lora',
+            align: 'center',
+            color: '#D8A16D',
+            rollColor: '#222222',
+            size: 18
+        }),
+        width: 120,
+        height: 50,
+        backgroundColor: '#222222',
+        rollBackgroundColor: '#D8A16D',
+        rollColor: '#222222',
+        borderColor: '#D8A16D',
+        corner: 2
+    }).pos(0,130,CENTER,CENTER, introContent);
+    var introBeginBtn = new Button({
+        label: new Label({
+            text: 'Begin',
+            font: 'Lora',
+            align: 'center',
+            color: '#D8A16D',
+            rollColor: '#222222',
+            size: 18
+        }),
+        width: 120,
+        height: 50,
+        backgroundColor: '#222222',
+        rollBackgroundColor: '#D8A16D',
+        rollColor: '#222222',
+        borderColor: '#D8A16D',
+        corner: 2
+    }).pos(0,130,CENTER,CENTER, introContent).alp(0);
+
+    //INTRO PAGE LAYOUT
+    const introLayoutManager = new LayoutManager();
+    introLayoutManager.add(new Layout(introPage, [
+        {object: new Container(0,0).addTo(introPage)},
+        {object: introContent},
+        {object: new Container(0,0).addTo(introPage)}
+    ], 5, "#222222", true, new Shape(), stage));
+    introLayoutManager.dispose();
+
+    //INTRO FUNCTION
+    function intro(){
+        introNextBtn.on("click", () => {
+            introTitle.text = 'Your Mission';
+            introSubtext.text = 'Within each level you must find enough stars to restore a constellation. When you spot a star tap on it and your score will increase. Keep a sharp eye out, stars can be hard to find in ordinary places.';
+            introNextBtn.removeFrom();
+            introBeginBtn.alpha = 1;
+        });
+
+        introBeginBtn.on("click", () => {
+            pages.go(levelOnePage, "right");
+            levelOne();
+        });
+    }
+
+    //LEVEL ONE COMPONENTS
+    var levOneContent = new Container(stageW, stageH).addTo(levelOnePage);
+
+    //INTRO
+    var levOneIntro = new Container(stageW, stageH).addTo(levOneContent);
+        var levOneIntroTitle = new Label({
+            text: 'Level 01',
+            font: 'Lora',
+            size: '40',
+            color: '#D0D0D0',
+            align: 'center'
+        }).pos(0,-50,CENTER,CENTER, levOneIntro);
+
+        var levOneIntroBorder = new Rectangle({
+            width: (stageW-100),
+            height: 1,
+            color: '#D8A16D'
+        }).pos(0,-10,CENTER,CENTER, levOneIntro);
+
+        var levOneIntroSubtext = new Label({
+            text: "“Across the sea of space, the stars are other suns” — Carl Sagan",
+            color: white,
+            font: 'Lato',
+            size: '20',
+            align: 'center',
+            labelWidth: (stageW-30)
+        }).pos(0, 30,CENTER,CENTER, levOneIntro);
+
+    //LEVEL
+    var levOneGame = new Container(stageW, stageH).addTo(levOneContent).alp(0);
+    //GAME SCORE
+        var levOneScore = 0;
+        var levOneScoreText = new Label({
+            text: 'Score: '+levOneScore+'/5',
+            font: 'Lora',
+            size: '30',
+            color: '#D8A16D'
+        }).pos(20,20,LEFT,TOP, levOneGame);
+    //STARS
+        var levOnePosTop = [530,580,630,480,100];
+        var levOnePosLeft = [140,250,300,10, 310];
+
+        var levOneStars = new Container(stageW, stageH).center(levOneGame);
+        var stars = frame.asset("star.png").sca(0.05);
+    //IMAGES
+        frame.asset("coral_1.png").sca(0.16).pos(-90,-80,LEFT,BOTTOM, levOneGame);
+        frame.asset("coral_2.png").sca(0.12).pos(-80,-40,RIGHT,BOTTOM, levOneGame);
+        frame.asset("fish.png").sca(0.06).pos(-20,190,LEFT,BOTTOM, levOneGame);
+        var whale1 = frame.asset("whale_1.png")
+            .sca(0.16)
+            .pos(-500,0,RIGHT,CENTER, levOneGame)
+            .animate({
+                props: {x: 320},
+                rewind: true,
+                loop: true,
+                time: 5000
+            });
+        var whale2 = frame.asset("whale_2.png")
+            .sca(0.16)
+            .pos(-610,-100,LEFT,CENTER, levOneGame)
+            .animate({
+                props: {x: -10},
+                rewind: true,
+                loop: true,
+                time: 5000,
+            });;
+        var jellyfish = frame.asset("jellyfish.png")
+            .sca(0.12)
+            .pos(30,100,RIGHT,TOP, levOneGame)
+            .animate({
+                props: {y:30},
+                loop:true,
+                rewind: true,
+                time: 10000
+            });
+
+    //LEVEL COMPLETE
+    levOneComplete = new Container(stageW, stageH).addTo(levOneContent).alp(0);
+    var levOneCompleteSubTitle = new Label({
+        text: 'You Found:',
+        font: 'Lora',
+        size: '20',
+        color: '#D0D0D0'
+    }).pos(30,300,LEFT,BOTTOM, levOneComplete);
+    var levOneCompleteTitle = new Label({
+        text: 'Aquarius',
+        font: 'Lora',
+        size: '40',
+        color: '#D0D0D0'
+    }).pos(30,250,LEFT,BOTTOM, levOneComplete);
+    var levOneCompleteBorder = new Rectangle({
+        width: (stageW-100),
+        height: 1,
+        color: '#D8A16D'
+    }).pos(30,230,LEFT,BOTTOM, levOneComplete);
+    var levOneCompleteSubtext = new Label({
+        text: "Aquarius gets its name from Latin which means, water-bearer or cup-bearer and its Latin symbol also represents water. Aquarius was first catalogued in the 19th century by the Greek astronomer, Ptolemy. This unique constellation is the 10th largest and also represents a zodiac sign.",
+        color: white,
+        font: 'Lato',
+        size: '18',
+        labelWidth: (stageW-60)
+    }).pos(30,90,LEFT,BOTTOM, levOneComplete);
+    var levOneCompleteNext = new Label({
+        text: 'Next Level \u2192',
+        color: white,
+        font: 'Lora',
+        size: '18',
+        color: '#D8A16D'
+    }).pos(30,50,RIGHT,BOTTOM, levOneComplete);
+
+    //LEVEL ONE LAYOUT
+    const levOneLayoutManager = new LayoutManager();
+    levOneLayoutManager.add(new Layout(levelOnePage, [
+        {object: new Container(0,0).addTo(levelOnePage)},
+        {object: levOneContent},
+        {object: new Container(0,0).addTo(levelOnePage)}
+    ], 5, "#222222", true, new Shape(), stage));
+    levOneLayoutManager.dispose();
+
+    //LEVEL ONE FUNCTION
+    function levelOne(){
+        timeout(2500, function(){
+            levOneIntro.animate({
+                props: {alpha: 0},
+                time: 800,
+                call: function(){
+                    levOneIntro.removeFrom();
+                    levOneGame.alpha = 1;
+                }
+            });
+        });
+
+        loop(5, function(star, i){
+            levOneStars.addChild(stars.clone().pos(levOnePosLeft[star], levOnePosTop[star], LEFT, TOP, levOneGame));
+        });
+
+        levOneStars.on("click", function(e){
+            var star = e.target;
+            star.animate({
+                props: {scale: 0.15},
+                rewind: true,
+                call: function(){
+                    star.removeFrom();
+                    levOneScore += 1;
+                    levOneScoreText.text = 'Score: '+levOneScore+'/5';
+                    if(levOneScore === 5){
+                        levOneGame.animate({
+                            props: {alpha: 0},
+                            time: 800,
+                            call: function(){
+                                levOneGame.removeFrom();
+                                levOneComplete.alpha = 1;
+                            }
+                        });
+                    }
+                }
+            })
+        });
+    }
+
+    frame.on("resize", ()=> {
+        ssLayoutManager.resize();
+        introLayoutManager.resize();
+        levOneLayoutManager.resize();
+        pages.resize();
+        stageW = frame.width;
+        stageH = frame.height;
+    });
+
+    stage.update();
+});
+
+</script>
+
+<meta name="viewport" content="width=device-width, user-scalable=no" />
+
+</head>
+
+<body>
+</body>
+</html>
