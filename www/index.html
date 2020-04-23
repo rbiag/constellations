@@ -56,7 +56,7 @@ frame.on("ready", () => {
         {page:introPage, swipe:[levelOnePage, null, null, null], speed:1000},
         {page:levelOnePage, swipe:[levelTwoPage, null, null, null], speed:1000},
         {page:levelTwoPage, swipe:[conclusionPage, null, null, null], speed:1000},
-        {page:conclusionPage, swipe:[null, splashScreenPage, null, null], speed:1000}
+        {page:conclusionPage, swipe:[null, null, null, null], speed:1000}
     ], "slide", 700).addTo();
 
     splashScreen();
@@ -273,7 +273,7 @@ frame.on("ready", () => {
         width: (stageW-100),
         height: 1,
         color: '#D8A16D'
-    }).pos(30,160,LEFT,BOTTOM, levOneComplete);
+    }).pos(30,180,LEFT,BOTTOM, levOneComplete);
     var levOneCompleteSubtext = new Label({
         text: "The Big Dipper is an asterism in the constellation Ursa Major (the Great Bear). One of the most familiar star shapes in the northern sky, it is a useful navigation tool. Asterisms are prominent groups of stars that form patterns but are smaller than, or even part of, a constellation.",
         color: white,
@@ -434,7 +434,7 @@ frame.on("ready", () => {
         width: (stageW-100),
         height: 1,
         color: '#D8A16D'
-    }).pos(30,160,LEFT,BOTTOM, levTwoComplete);
+    }).pos(30,180,LEFT,BOTTOM, levTwoComplete);
     var levTwoCompleteSubtext = new Label({
         text: "Aquarius gets its name from Latin which means, water-bearer or cup-bearer and its Latin symbol also represents water. Aquarius was first catalogued in the 19th century by the Greek astronomer, Ptolemy. This unique constellation is the 10th largest and also represents a zodiac sign.",
         color: white,
@@ -501,7 +501,6 @@ frame.on("ready", () => {
 
         levTwoCompleteNext.on("click", function(){
             pages.go(conclusionPage, "right");
-            conclusion();
         });
     }
 
@@ -522,23 +521,6 @@ frame.on("ready", () => {
         align: 'center',
         labelWidth: (stageW-30)
     }).pos(0,30,CENTER,CENTER, conContent);
-    var conNextBtn = new Button({
-        label: new Label({
-            text: 'Play Again',
-            font: 'Lora',
-            align: 'center',
-            color: '#D8A16D',
-            rollColor: '#222222',
-            size: '16'
-        }),
-        width: 150,
-        height: 50,
-        backgroundColor: '#222222',
-        rollBackgroundColor: '#D8A16D',
-        rollColor: '#222222',
-        borderColor: '#D8A16D',
-        corner: 2
-    }).pos(0,130,CENTER,CENTER, conContent);
 
     //INTRO PAGE LAYOUT
     const conclusionLayoutManager = new LayoutManager();
@@ -548,13 +530,6 @@ frame.on("ready", () => {
         {object: new Container(0,0).addTo(conclusionPage)}
     ], 5, "#222222", true, new Shape(), stage));
     conclusionLayoutManager.dispose();
-
-    function conclusion(){
-        conNextBtn.on("click", function(){
-            pages.go(introPage, "left");
-        });
-    }
-
 
     frame.on("resize", ()=> {
         ssLayoutManager.resize();
