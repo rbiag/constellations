@@ -22,16 +22,24 @@ const outerColor = white;
 const assets = [
     "star.png",
     //LEVEL ONE
+    "mountains.png",
+    "boat.png",
+    "cloud_1.png",
+    "cloud_2.png",
+    "balloon.png",
+    "big_dipper.png",
+    //LEVEL TWO
     "coral.png",
     "fish.png",
     "whale.png",
-    "jellyfish.png"
+    "jellyfish.png",
+    "aquarius.png"
 ];
 const path ="assets/";
 
 const frame = new Frame(scaling, width, height, color, outerColor, assets, path);
-frame.on("ready", () => { // ES6 Arrow Function - like function(){}
-    zog("ready from ZIM Frame"); // logs in console (F12 - choose console)
+frame.on("ready", () => {
+    zog("ready from ZIM Frame");
 
     const stage = frame.stage;
     let stageW = frame.width;
@@ -41,13 +49,14 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
     const introPage = new Container(stageW, stageH);
     const levelOnePage = new Container(stageW, stageH);
     const levelTwoPage = new Container(stageW, stageH);
-    const levelThreePage = new Container(stageW, stageH);
     const conclusionPage = new Container(stageW, stageH);
 
     const pages = new Pages([
         {page:splashScreenPage, swipe:[null, null, introPage, null], speed:1000},
         {page:introPage, swipe:[levelOnePage, null, null, null], speed:1000},
-        {page:levelOnePage, swipe:[null, null, null, null], speed:1000},
+        {page:levelOnePage, swipe:[levelTwoPage, null, null, null], speed:1000},
+        {page:levelTwoPage, swipe:[conclusionPage, null, null, null], speed:1000},
+        {page:conclusionPage, swipe:[null, splashScreenPage, null, null], speed:1000}
     ], "slide", 700).addTo();
 
     splashScreen();
@@ -174,15 +183,13 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
             color: '#D0D0D0',
             align: 'center'
         }).pos(0,-50,CENTER,CENTER, levOneIntro);
-
         var levOneIntroBorder = new Rectangle({
             width: (stageW-100),
             height: 1,
             color: '#D8A16D'
         }).pos(0,-10,CENTER,CENTER, levOneIntro);
-
         var levOneIntroSubtext = new Label({
-            text: "“Across the sea of space, the stars are other suns” — Carl Sagan",
+            text: "“The adventure begins when the stars meet the mountains” — Unknown ",
             color: white,
             font: 'Lato',
             size: '18',
@@ -196,7 +203,7 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
     //GAME SCORE
     var levOneScore = 0;
     var levOneScoreText = new Label({
-        text: 'Score: '+levOneScore+'/5',
+        text: 'Score: '+levOneScore+'/3',
         font: 'Lora',
         size: '20',
         color: '#D8A16D'
@@ -204,78 +211,83 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
     //STARS
     var levOneStars = new Container(stageW, stageH).center(levOneGame);
     var stars = frame.asset("star.png").sca(0.04);
-    var levOnePosY = [265,100,0,80,50];
-    var levOnePosYFrom = [TOP, TOP, BOTTOM, BOTTOM, BOTTOM];
-    var levOnePosX = [135,70,100, -30, 120];
-    var levOnePosXFrom = [LEFT, RIGHT, LEFT, CENTER, RIGHT];
+    var levOnePosY = [100,-10,120];
+    var levOnePosYFrom = [TOP, CENTER, BOTTOM];
+    var levOnePosX = [70,10,60];
+    var levOnePosXFrom = [RIGHT, LEFT, RIGHT];
     //IMAGES
-    var floor = new Tile({
-        obj: frame.asset("coral.png").sca(0.6),
-        cols: 10,
-        spacingH: -50
-    }).pos(-50,-50,LEFT,BOTTOM, levOneGame)
-    var jellyfish = frame.asset("jellyfish.png")
-        .sca(0.12)
-        .pos(30,100,RIGHT,TOP, levOneGame)
+    var mountains = frame.asset("mountains.png").sca(0.2).center(levOneGame);
+    var boat = frame.asset("boat.png")
+        .sca(0.03)
+        .pos(20, 100, RIGHT, BOTTOM, levOneGame)
         .animate({
-            props: {y:30},
-            loop:true,
+            props: {x: 240},
             rewind: true,
-            time: 10000
-        });
-    var fish = frame.asset("fish.png")
-        .sca(0.04)
-        .pos(30,200,LEFT,TOP, levOneGame)
-        .animate({
-            props: {y: 206},
             loop: true,
-            rewind: true,
-            time: 15000
+            time: 5000
         });
-    var whale = frame.asset("whale.png")
-        .sca(0.2)
-        .pos(-260, -100, RIGHT, BOTTOM, levOneGame)
-        .bot()
+    var cloud1 = frame.asset("cloud_1.png")
+        .sca(0.4)
+        .pos(-300,50,RIGHT,TOP, levOneGame)
         .animate({
-            props: {y: 300},
+            props: {x: -200},
             loop: true,
             rewind: true,
             time: 50000
         });
+    var cloud2 = frame.asset("cloud_2.png")
+        .sca(0.6)
+        .pos(-100,130,RIGHT,TOP,levOneGame)
+        .animate({
+            props: {x: -200},
+            loop: true,
+            rewind: true,
+            time: 50000
+        });
+    var balloon = frame.asset("balloon.png")
+        .sca(0.03)
+        .pos(30,60,RIGHT,TOP,levOneGame)
+        .animate({
+            props: {y: 70},
+            loop: true,
+            rewind: true,
+            time: 8000
+        });
     
     //LEVEL COMPLETE
-    levOneComplete = new Container(stageW, stageH).addTo(levOneContent).alp(0);
+    var levOneComplete = new Container(stageW, stageH).addTo(levOneContent).alp(0);
+    var bigDipper = frame.asset("big_dipper.png").sca(0.3).pos(0,60,CENTER,TOP,levOneComplete);
     var levOneCompleteSubTitle = new Label({
         text: 'You Found:',
         font: 'Lora',
         size: '18',
         color: '#D0D0D0'
-    }).pos(30,300,LEFT,BOTTOM, levOneComplete);
+    }).pos(30,220,LEFT,BOTTOM, levOneComplete);
     var levOneCompleteTitle = new Label({
-        text: 'Aquarius',
+        text: 'The Big Dipper',
         font: 'Lora',
         size: '35',
         color: '#D0D0D0'
-    }).pos(30,250,LEFT,BOTTOM, levOneComplete);
+    }).pos(30,180,LEFT,BOTTOM, levOneComplete);
     var levOneCompleteBorder = new Rectangle({
         width: (stageW-100),
         height: 1,
         color: '#D8A16D'
-    }).pos(30,230,LEFT,BOTTOM, levOneComplete);
+    }).pos(30,160,LEFT,BOTTOM, levOneComplete);
     var levOneCompleteSubtext = new Label({
-        text: "Aquarius gets its name from Latin which means, water-bearer or cup-bearer and its Latin symbol also represents water. Aquarius was first catalogued in the 19th century by the Greek astronomer, Ptolemy. This unique constellation is the 10th largest and also represents a zodiac sign.",
+        text: "The Big Dipper is an asterism in the constellation Ursa Major (the Great Bear). One of the most familiar star shapes in the northern sky, it is a useful navigation tool. Asterisms are prominent groups of stars that form patterns but are smaller than, or even part of, a constellation.",
         color: white,
         font: 'Lato',
         size: '16',
         labelWidth: (stageW-60)
-    }).pos(30,90,LEFT,BOTTOM, levOneComplete);
+    }).pos(30,30,LEFT,BOTTOM, levOneComplete);
     var levOneCompleteNext = new Label({
         text: 'Next Level \u2192',
         color: white,
         font: 'Lora',
         size: '16',
         color: '#D8A16D'
-    }).pos(30,50,RIGHT,BOTTOM, levOneComplete);
+    }).pos(30,0,RIGHT,BOTTOM, levOneComplete);
 
     //LEVEL ONE LAYOUT
     const levOneLayoutManager = new LayoutManager();
@@ -299,7 +311,7 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
             });
         });
 
-        loop(5, function(star, i){
+        loop(3, function(star, i){
             levOneStars.addChild(stars.clone().pos(levOnePosX[star], levOnePosY[star], levOnePosXFrom[star], levOnePosYFrom[star], levOneGame));
         });
 
@@ -311,8 +323,8 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
                 call: function(){
                     star.removeFrom();
                     levOneScore += 1;
-                    levOneScoreText.text = 'Score: '+levOneScore+'/5';
-                    if(levOneScore === 5){
+                    levOneScoreText.text = 'Score: '+levOneScore+'/3';
+                    if(levOneScore === 3){
                         levOneGame.animate({
                             props: {alpha: 0},
                             time: 800,
@@ -325,13 +337,231 @@ frame.on("ready", () => { // ES6 Arrow Function - like function(){}
                 }
             });
         });
+
+        levOneCompleteNext.on("click", function(){
+            pages.go(levelTwoPage, "right");
+            levelTwo();
+        });
     }
+
+    //LEVEL TWO COMPONENTS
+    var levTwoContent = new Container(stageW, stageH).addTo(levelTwoPage);
+    
+    //INTRO
+    var levTwoIntro = new Container(stageW, stageH).addTo(levTwoContent);
+        var levTwoIntroTitle = new Label({
+            text: 'Level 02',
+            font: 'Lora',
+            size: '35',
+            color: '#D0D0D0',
+            align: 'center'
+        }).pos(0,-50,CENTER,CENTER, levTwoIntro);
+        var levTwoIntroBorder = new Rectangle({
+            width: (stageW-100),
+            height: 1,
+            color: '#D8A16D'
+        }).pos(0,-10,CENTER,CENTER, levTwoIntro);
+        var levTwoIntroSubtext = new Label({
+            text: "“Across the sea of space, the stars are other suns” — Carl Sagan",
+            color: white,
+            font: 'Lato',
+            size: '18',
+            align: 'center',
+            labelWidth: (stageW-30)
+        }).pos(0, 30,CENTER,CENTER, levTwoIntro);
+
+    //LEVEL
+    var levTwoGame = new Container(stageW, stageH).addTo(levTwoContent).alp(0);
+    //GAME SCORE
+    var levTwoScore = 0;
+    var levTwoScoreText = new Label({
+        text: 'Score: '+levTwoScore+'/5',
+        font: 'Lora',
+        size: '20',
+        color: '#D8A16D'
+    }).pos(20,20,LEFT,TOP, levTwoGame);
+    //STARS
+    var levTwoStars = new Container(stageW, stageH).center(levTwoGame);
+    var levTwoPosY = [258,100,0,80,50];
+    var levTwoPosYFrom = [TOP, TOP, BOTTOM, BOTTOM, BOTTOM];
+    var levTwoPosX = [126,70,100, -30, 120];
+    var levTwoPosXFrom = [LEFT, RIGHT, LEFT, CENTER, RIGHT];
+    //IMAGES
+    var floor = new Tile({
+        obj: frame.asset("coral.png").sca(0.6),
+        cols: 10,
+        spacingH: -50
+    }).pos(-50,-50,LEFT,BOTTOM, levTwoGame)
+    var jellyfish = frame.asset("jellyfish.png")
+        .sca(0.12)
+        .pos(30,100,RIGHT,TOP, levTwoGame)
+        .animate({
+            props: {y:30},
+            loop:true,
+            rewind: true,
+            time: 10000
+        });
+    var fish = frame.asset("fish.png")
+        .sca(0.04)
+        .pos(20,200,LEFT,TOP,levTwoGame);
+    var whale = frame.asset("whale.png")
+        .sca(0.2)
+        .pos(-260, -100, RIGHT, BOTTOM, levTwoGame)
+        .bot()
+        .animate({
+            props: {y: 300},
+            loop: true,
+            rewind: true,
+            time: 50000
+        });
+    
+    //LEVEL COMPLETE
+    var levTwoComplete = new Container(stageW, stageH).addTo(levTwoContent).alp(0);
+    var aquarius = frame.asset("aquarius.png").sca(0.3).pos(0,80,CENTER,TOP,levTwoComplete);
+    var levTwoCompleteSubTitle = new Label({
+        text: 'You Found:',
+        font: 'Lora',
+        size: '18',
+        color: '#D0D0D0'
+    }).pos(30,220,LEFT,BOTTOM,levTwoComplete);
+    var levTwoCompleteTitle = new Label({
+        text: 'Aquarius',
+        font: 'Lora',
+        size: '35',
+        color: '#D0D0D0'
+    }).pos(30,180,LEFT,BOTTOM,levTwoComplete);
+    var levTwoCompleteBorder = new Rectangle({
+        width: (stageW-100),
+        height: 1,
+        color: '#D8A16D'
+    }).pos(30,160,LEFT,BOTTOM, levTwoComplete);
+    var levTwoCompleteSubtext = new Label({
+        text: "Aquarius gets its name from Latin which means, water-bearer or cup-bearer and its Latin symbol also represents water. Aquarius was first catalogued in the 19th century by the Greek astronomer, Ptolemy. This unique constellation is the 10th largest and also represents a zodiac sign.",
+        color: white,
+        font: 'Lato',
+        size: '16',
+        labelWidth: (stageW-60)
+    }).pos(30,30,LEFT,BOTTOM, levTwoComplete);
+    var levTwoCompleteNext = new Label({
+        text: 'Complete Game \u2192',
+        color: white,
+        font: 'Lora',
+        size: '16',
+        color: '#D8A16D'
+    }).pos(30,0,RIGHT,BOTTOM, levTwoComplete);
+
+    //LEVEL TWO LAYOUT
+    const levTwoLayoutManager = new LayoutManager();
+    levTwoLayoutManager.add(new Layout(levelTwoPage, [
+        {object: new Container(0,0).addTo(levelTwoPage)},
+        {object: levTwoContent},
+        {object: new Container(0,0).addTo(levelTwoPage)}
+    ], 5, "#222222", true, new Shape(), stage));
+    levTwoLayoutManager.dispose();
+
+    //LEVEL TWO FUNCTION
+    function levelTwo(){
+        timeout(2500, function(){
+            levTwoIntro.animate({
+                props: {alpha: 0},
+                time: 800,
+                call: function(){
+                    levTwoIntro.removeFrom();
+                    levTwoGame.alpha = 1;
+                }
+            });
+        });
+
+        loop(5, function(star, i){
+            levTwoStars.addChild(stars.clone().pos(levTwoPosX[star], levTwoPosY[star], levTwoPosXFrom[star], levTwoPosYFrom[star], levTwoGame));
+        });
+
+        levTwoStars.on("click", function(e){
+            var star = e.target;
+            star.animate({
+                props: {scale: 0.15},
+                rewind: true,
+                call: function(){
+                    star.removeFrom();
+                    levTwoScore += 1;
+                    levTwoScoreText.text = 'Score: '+levTwoScore+'/5';
+                    if(levTwoScore === 5){
+                        levTwoGame.animate({
+                            props: {alpha: 0},
+                            time: 800,
+                            call: function(){
+                                levTwoGame.removeFrom();
+                                levTwoComplete.alpha = 1;
+                            }
+                        });
+                    }
+                }
+            });
+        });
+
+        levTwoCompleteNext.on("click", function(){
+            pages.go(conclusionPage, "right");
+            conclusion();
+        });
+    }
+
+    //CONCLUSION COMPONENTS
+    var conContent = new Container(stageW, stageH).addTo(conclusionPage);
+    var conTitle = new Label({
+        text: 'You Did It!',
+        font: 'Lora',
+        size: '35',
+        color: '#D8A16D',
+        align: 'center'
+    }).pos(0,-50,CENTER,CENTER, conContent);
+    var conSubtext = new Label({
+        text: "You completed all the levels! Be sure to check back later for more challenges or play the game all over again",
+        color: white,
+        font: 'Lato',
+        size: '16',
+        align: 'center',
+        labelWidth: (stageW-30)
+    }).pos(0,30,CENTER,CENTER, conContent);
+    var conNextBtn = new Button({
+        label: new Label({
+            text: 'Play Again',
+            font: 'Lora',
+            align: 'center',
+            color: '#D8A16D',
+            rollColor: '#222222',
+            size: '16'
+        }),
+        width: 150,
+        height: 50,
+        backgroundColor: '#222222',
+        rollBackgroundColor: '#D8A16D',
+        rollColor: '#222222',
+        borderColor: '#D8A16D',
+        corner: 2
+    }).pos(0,130,CENTER,CENTER, conContent);
+
+    //INTRO PAGE LAYOUT
+    const conclusionLayoutManager = new LayoutManager();
+    conclusionLayoutManager.add(new Layout(conclusionPage, [
+        {object: new Container(0,0).addTo(conclusionPage)},
+        {object: conContent},
+        {object: new Container(0,0).addTo(conclusionPage)}
+    ], 5, "#222222", true, new Shape(), stage));
+    conclusionLayoutManager.dispose();
+
+    function conclusion(){
+        conNextBtn.on("click", function(){
+            pages.go(introPage, "left");
+        });
+    }
+
 
     frame.on("resize", ()=> {
         ssLayoutManager.resize();
-
         introLayoutManager.resize();
         levOneLayoutManager.resize();
+        levTwoLayoutManager.resize();
+        conclusionLayoutManager.resize();
         pages.resize();
         stageW = frame.width;
         stageH = frame.height;
